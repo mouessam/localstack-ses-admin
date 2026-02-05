@@ -376,29 +376,40 @@ const formatTime = (isoString: string) => {
     : date.toLocaleDateString([], { month: 'short', day: 'numeric' });
 };
 
-const extractMessageView = (msg: Message) => {
+const extractMessageView = (msg: Message): Omit<MessageView, 'key' | 'raw'> => {
   const raw = msg as Record<string, unknown>;
-  const subject = raw.Subject ?? raw.subject ?? raw.subject_line ?? '';
-  const from = raw.Source ?? raw.from ?? '';
+  const subject = (raw.Subject ?? raw.subject ?? raw.subject_line ?? '') as string;
+  const from = (raw.Source ?? raw.from ?? '') as string;
   const toList =
-    raw.Destination?.ToAddresses ??
-    raw.Destination?.to ??
+    (raw.Destination as Record<string, unknown> | undefined)?.ToAddresses ??
+    (raw.Destination as Record<string, unknown> | undefined)?.to ??
     raw.to ??
     raw.ToAddresses ??
-    raw.Destination?.toAddresses ??
+    (raw.Destination as Record<string, unknown> | undefined)?.toAddresses ??
     [];
   const to = Array.isArray(toList) ? toList.join(', ') : String(toList ?? '');
-  const timestamp = raw.Timestamp ?? raw.timestamp ?? '';
+  const timestamp = (raw.Timestamp ?? raw.timestamp ?? '') as string;
 
+  const body = raw.Body as Record<string, unknown> | undefined;
   const textBody =
-    raw.Body?.text_part ?? raw.Body?.Text?.Data ?? raw.body?.text_part ?? raw.text ?? raw.Text ?? '';
+    (body?.text_part ??
+      (body?.Text as Record<string, unknown> | undefined)?.Data ??
+      (raw.body as Record<string, unknown> | undefined)?.text_part ??
+      raw.text ??
+      raw.Text ??
+      '') as string;
   const htmlBody =
-    raw.Body?.html_part ?? raw.Body?.Html?.Data ?? raw.body?.html_part ?? raw.html ?? raw.Html ?? '';
+    (body?.html_part ??
+      (body?.Html as Record<string, unknown> | undefined)?.Data ??
+      (raw.body as Record<string, unknown> | undefined)?.html_part ??
+      raw.html ??
+      raw.Html ??
+      '') as string;
   const previewSource = textBody || htmlBody || '';
   const preview = typeof previewSource === 'string' ? previewSource.trim().slice(0, 160) : '';
 
   return {
-    id: raw.Id ?? raw.id,
+    id: (raw.Id ?? raw.id) as string | undefined,
     subject,
     from,
     to,
