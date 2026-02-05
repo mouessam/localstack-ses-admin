@@ -1,0 +1,24 @@
+{
+  "name": "localstack-ses-admin",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "npm run build -w @ses-admin/shared && npm run build -w @ses-admin/server && npm run build -w @ses-admin/ui",
+    "dev": "node scripts/dev.mjs",
+    "dev:server": "npm run dev -w @ses-admin/server",
+    "dev:ui": "npm run dev -w @ses-admin/ui",
+    "lint": "npm run lint -w @ses-admin/shared && npm run lint -w @ses-admin/server && npm run lint -w @ses-admin/ui",
+    "typecheck": "npm run typecheck -w @ses-admin/shared && npm run typecheck -w @ses-admin/server && npm run typecheck -w @ses-admin/ui",
+    "test": "npm run test -w @ses-admin/server",
+    "test:e2e": "npm run test:e2e -w @ses-admin/server"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.35.0",
+    "@typescript-eslint/eslint-plugin": "8.43.0",
+    "@typescript-eslint/parser": "8.43.0",
+    "eslint": "9.35.0",
+    "eslint-config-prettier": "9.1.2",
+    "prettier": "3.6.2",
+    "typescript": "5.8.3"
+  }
+}

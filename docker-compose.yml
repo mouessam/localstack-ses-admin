@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - SERVICES=ses
+      - DEFAULT_REGION=us-east-1
+    ports:
+      - "4566:4566"
+
+  ses-admin:
+    build: .
+    environment:
+      - LOCALSTACK_ENDPOINT=http://localstack:4566
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - localstack

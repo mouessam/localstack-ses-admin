@@ -1,0 +1,27 @@
+{
+  "name": "@ses-admin/ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "dev": "node esbuild.config.js --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@ses-admin/shared": "0.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "autoprefixer": "^10.4.24",
+    "clsx": "^2.1.1",
+    "esbuild": "0.25.9",
+    "postcss": "^8.5.6",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss": "^3.4.19",
+    "typescript": "5.8.3"
+  }
+}
