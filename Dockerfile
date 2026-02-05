@@ -1,10 +1,19 @@
 FROM node:24-alpine AS build
 WORKDIR /app
 
-COPY package.json package-lock.json* tsconfig.base.json ./
+# Copy package files first for better layer caching
+COPY package.json package-lock.json tsconfig.base.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/server/package.json ./packages/server/
+COPY packages/ui/package.json ./packages/ui/
+
+# Install dependencies (cached unless package files change)
+RUN npm install
+
+# Copy source files
 COPY packages ./packages
 
-RUN npm install
+# Build
 RUN npm run build
 
 FROM gcr.io/distroless/nodejs24-debian12

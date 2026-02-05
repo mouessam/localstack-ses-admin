@@ -1,5 +1,9 @@
 # LocalStack SES Admin
 
+[![Tests](https://github.com/mouessam/localstack-ses-admin/actions/workflows/ci.yml/badge.svg)](https://github.com/mouessam/localstack-ses-admin/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)](https://github.com/mouessam/localstack-ses-admin)
+[![Docker Hub](https://img.shields.io/badge/docker-mouessam%2Flocalstack--ses--admin-blue)](https://hub.docker.com/r/mouessam/localstack-ses-admin)
+
 A lightweight admin panel for LocalStack SES Community. It ships as a single container image that serves both the API and the React UI.
 
 ## Features
@@ -15,7 +19,7 @@ This repo follows Clean Architecture with a single composition root. See `docs/a
 ## Quickstart (Docker)
 ```bash
 # Build the admin image
-docker build -t localstack-ses-admin .
+docker build -t mouessam/localstack-ses-admin .
 
 # Run LocalStack SES
 docker run -d --name localstack -p 4566:4566 -e SERVICES=ses localstack/localstack:latest
@@ -26,7 +30,7 @@ docker run -p 8080:8080 \
   -e AWS_REGION=us-east-1 \
   -e AWS_ACCESS_KEY_ID=test \
   -e AWS_SECRET_ACCESS_KEY=test \
-  localstack-ses-admin
+  mouessam/localstack-ses-admin
 ```
 
 ## Quickstart (Compose)
@@ -68,19 +72,23 @@ Open `http://localhost:8080`.
 npm run test
 ```
 
+## Test Coverage
+```bash
+npm run test:coverage
+```
+Target: 80% line coverage (enforced in CI).
+
 ## Docker Release (CI)
 On GitHub tags that match `v*` (e.g., `v1.2.3`), CI builds and publishes a multi-arch image to Docker Hub.
 
 Images are pushed with these tags:
-- `vX.Y.Z`
-- `X.Y.Z`
-- `latest`
+- `mouessam/localstack-ses-admin:vX.Y.Z`
+- `mouessam/localstack-ses-admin:X.Y.Z`
+- `mouessam/localstack-ses-admin:latest`
 
 **Required secrets (GitHub Actions):**
 - `DOCKERHUB_USERNAME`
 - `DOCKERHUB_TOKEN` (use a Docker Hub access token with least privilege, not your password)
-
-Default image name is `${DOCKERHUB_USERNAME}/localstack-ses-admin` (see `.github/workflows/ci.yml`).
 
 ## Limitations (LocalStack Community)
 - SES v1 only (SES v2 is not supported in Community)

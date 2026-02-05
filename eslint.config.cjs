@@ -53,6 +53,7 @@ module.exports = [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
+      'no-undef': 'off', // TypeScript handles this
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
@@ -75,6 +76,7 @@ module.exports = [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
+      'no-undef': 'off', // TypeScript handles this
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
