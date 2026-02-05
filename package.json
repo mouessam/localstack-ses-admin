@@ -10,7 +10,7 @@
     "lint": "npm run lint -w @ses-admin/shared && npm run lint -w @ses-admin/server && npm run lint -w @ses-admin/ui",
     "typecheck": "npm run typecheck -w @ses-admin/shared && npm run typecheck -w @ses-admin/server && npm run typecheck -w @ses-admin/ui",
     "test": "npm run test -w @ses-admin/server",
-    "test:coverage": "npm run test:coverage -w @ses-admin/server",
+    "test:coverage": "npm run build -w @ses-admin/shared && npm run build -w @ses-admin/server && npm run test:coverage -w @ses-admin/server",
     "test:e2e": "npm run test:e2e -w @ses-admin/server"
   },
   "devDependencies": {
