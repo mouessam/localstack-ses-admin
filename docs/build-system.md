@@ -1,50 +1,45 @@
-# Build System
+# BUILD SYSTEM
 
-This monorepo uses npm workspaces and a shared TypeScript base config.
+Npm workspaces, shared TypeScript config, hybrid build per package.
 
-## Package Build Strategy
+## PACKAGE STRATEGY
+| Package | Build | Output |
+|----------|--------|---------|
+| shared | `tsc` | `dist/` (library) |
+| server | `tsc --noEmit` + esbuild | `dist/main.js` (bundle) |
+| ui | `tsc --noEmit` + esbuild | `dist/app.js`, `dist/index.html` (bundle) |
 
-- `@ses-admin/shared`: TypeScript compile (`tsc`) emits publishable library output in `dist/`.
-- `@ses-admin/server`: TypeScript typecheck (`tsc --noEmit`) + esbuild bundle to `dist/main.js`.
-- `@ses-admin/ui`: TypeScript typecheck (`tsc --noEmit`) + esbuild bundle to `dist/app.js` and `dist/index.html`.
+## ALIASES
+TypeScript `paths`: `@ses-admin/{shared,server,ui}` → package src/  
+esbuild plugin: Runtime alias resolution via `packages/build-tools/esbuild-alias-plugin.cjs`
 
-## Alias Resolution
+## STANDARD SCRIPTS
+Each package: `clean`, `build`, `dev`, `typecheck`, `lint`, `test`, `test:coverage`
 
-Workspace aliases are defined in `/Users/moessam/WebstormProjects/localstack-ses-viewr/tsconfig.base.json`:
+Workspace: `npm run {command} --workspaces`
 
-- `@ses-admin/shared`
-- `@ses-admin/server`
-- `@ses-admin/ui`
+## WHERE TO LOOK
+| Task | Location | Notes |
+|------|----------|-------|
+| Add alias | tsconfig.base.json | Update paths |
+| Fix bundle | package/esbuild.config.js | Plugin config |
+| Hot reload | server/src/delivery/http/create-server.ts | SSE endpoint |
+| Coverage | package.json | c8 config |
 
-esbuild path aliasing is centralized in `@ses-admin/build-tools`:
+## CONVENTIONS
+- **prebuild: clean**: Always fresh build (remove dist/ + .tsbuildinfo)
+- **Hybrid typecheck**: tsc validates types, esbuild produces runtime
+- **Shared plugin**: Both server/ui consume `@ses-admin/build-tools` for aliasing
+- **Workspace order**: `npm run build` builds shared first (dependency of server/ui)
 
-- `/Users/moessam/WebstormProjects/localstack-ses-viewr/packages/build-tools/esbuild-alias-plugin.cjs`
+## UNIQUE STYLES
+- **Hot reload**: SSE-based (Server-Sent Events) via `/__reload` endpoint
+- **Docker caching**: Layer cache (package.json → build) for fast rebuilds
+- **Coverage enforcement**: 80% target, CI gate
+- **No bundling frameworks**: Pure esbuild (not webpack/vite)
 
-Both server and UI consume that plugin for bundling.
-
-## Standard Scripts
-
-Each package exposes:
-
-- `clean`
-- `build`
-- `dev`
-- `typecheck`
-- `lint`
-- `test`
-- `test:coverage`
-
-Workspace commands from repo root:
-
-- `npm run build --workspaces`
-- `npm run typecheck --workspaces`
-- `npm run test --workspaces`
-- `npm run test:coverage --workspaces`
-
-## Output Contract
-
-- Shared output: `/Users/moessam/WebstormProjects/localstack-ses-viewr/packages/shared/dist`
-- Server runtime bundle: `/Users/moessam/WebstormProjects/localstack-ses-viewr/packages/server/dist/main.js`
-- UI static bundle: `/Users/moessam/WebstormProjects/localstack-ses-viewr/packages/ui/dist`
-- Coverage summaries:
-  `/Users/moessam/WebstormProjects/localstack-ses-viewr/packages/<pkg>/coverage/coverage-summary.json`
+## OUTPUT
+- Shared: `packages/shared/dist/`
+- Server: `packages/server/dist/main.js`
+- UI: `packages/ui/dist/` (app.js + index.html)
+- Coverage: `packages/<pkg>/coverage/*.json`

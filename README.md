@@ -4,65 +4,49 @@
 [![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)](https://github.com/mouessam/localstack-ses-admin)
 [![Docker Hub](https://img.shields.io/badge/docker-mouessam%2Flocalstack--ses--admin-blue)](https://hub.docker.com/r/mouessam/localstack-ses-admin)
 
-A lightweight admin panel for LocalStack SES Community. It ships as a single container image that serves both the API
-and the React UI.
+Admin panel for LocalStack SES Community. Single container serving Fastify API + React SPA.
 
-## Features
+## FEATURES
 
-- Verify and delete SES identities
+- Verify/delete SES identities (email/domain)
 - Send email via SES SendEmail
-- Send raw MIME emails with attachments
-- Inspect and delete messages via `/_aws/ses`
-- Clean Architecture with ports and adapters
+- Send raw MIME with attachments
+- Inspect/delete messages via `/_aws/ses`
+- Clean Architecture + ports/adapters
+- Type-safe Zod contracts
+- Dev hot reload (SSE)
 
-## Architecture
-
-This repo follows Clean Architecture with a single composition root. See `docs/architecture.md` for a diagram and
-details.
-
-Build and import-system details:
-
-- `docs/build-system.md`
-- `docs/import-conventions.md`
-
-## Quickstart (Docker)
+## QUICKSTART (DOCKER)
 
 ```bash
-# Build the admin image
 docker build -t mouessam/localstack-ses-admin .
-
-# Run LocalStack SES
 docker run -d --name localstack -p 4566:4566 -e SERVICES=ses localstack/localstack:latest
-
-# Run the admin UI/API
 docker run -p 8080:8080 \
   -e LOCALSTACK_ENDPOINT=http://host.docker.internal:4566 \
   -e AWS_REGION=us-east-1 \
-  -e AWS_ACCESS_KEY_ID=test \
-  -e AWS_SECRET_ACCESS_KEY=test \
   mouessam/localstack-ses-admin
 ```
 
-## Quickstart (Compose)
+## QUICKSTART (COMPOSE)
 
 ```bash
 docker compose up --build
 ```
 
-Then open `http://localhost:8080`.
+Open `http://localhost:8080`.
 
-## Configuration
+## CONFIGURATION
 
-| Variable                | Default                  | Description                            |
-|-------------------------|--------------------------|----------------------------------------|
-| `LOCALSTACK_ENDPOINT`   | `http://localstack:4566` | LocalStack edge endpoint               |
-| `AWS_REGION`            | `us-east-1`              | AWS region                             |
-| `AWS_ACCESS_KEY_ID`     | `test`                   | AWS access key                         |
-| `AWS_SECRET_ACCESS_KEY` | `test`                   | AWS secret key                         |
-| `PORT`                  | `8080`                   | Server port                            |
-| `UI_DIST_PATH`          | auto                     | Optional override for UI static assets |
+| Variable                | Default                  | Description         |
+|-------------------------|--------------------------|---------------------|
+| `LOCALSTACK_ENDPOINT`   | `http://localstack:4566` | LocalStack endpoint |
+| `AWS_REGION`            | `us-east-1`              | AWS region          |
+| `AWS_ACCESS_KEY_ID`     | `test`                   | AWS access key      |
+| `AWS_SECRET_ACCESS_KEY` | `test`                   | AWS secret key      |
+| `PORT`                  | `8080`                   | Server port         |
+| `UI_DIST_PATH`          | auto                     | UI static override  |
 
-## API Endpoints
+## API ENDPOINTS
 
 - `GET /api/health`
 - `GET /api/identities`
@@ -73,7 +57,7 @@ Then open `http://localhost:8080`.
 - `GET /api/messages`
 - `DELETE /api/messages`
 
-## Local Development
+## LOCAL DEVELOPMENT
 
 ```bash
 npm install
@@ -83,48 +67,38 @@ npm run dev
 
 Open `http://localhost:8080`.
 
-Useful checks:
+## CHECKS
 
 ```bash
-npm run lint
-npm run typecheck
-npm run lint:imports
+npm run lint              # Lint all
+npm run typecheck         # TypeScript check
+npm run lint:imports      # Enforce workspace aliases
 ```
 
-## Tests
+## TESTS
 
 ```bash
-npm run test
+npm run test             # Node.js test runner + tsx
+npm run test:coverage    # 80% target enforced in CI
 ```
 
-## Test Coverage
+## DOCUMENTATION
 
-```bash
-npm run test:coverage
-```
+- `docs/architecture.md` - Clean Architecture layers, data flow
+- `docs/build-system.md` - Hybrid build, workspace aliases, hot reload
+- `docs/import-conventions.md` - Workspace alias enforcement
 
-Target: 80% line coverage (enforced in CI).
+## DOCKER RELEASE (CI)
 
-## Docker Release (CI)
+GitHub tags `v*` → multi-arch Docker Hub image.
 
-On GitHub tags that match `v*` (e.g., `v1.2.3`), CI builds and publishes a multi-arch image to Docker Hub.
+Tags: `:vX.Y.Z`, `:X.Y.Z`, `:latest`
 
-Images are pushed with these tags:
+## LIMITATIONS (LOCALSTACK COMMUNITY)
 
-- `mouessam/localstack-ses-admin:vX.Y.Z`
-- `mouessam/localstack-ses-admin:X.Y.Z`
-- `mouessam/localstack-ses-admin:latest`
+- SES v1 only (no v2)
+- No SMTP/inbound email
 
-**Required secrets (GitHub Actions):**
-
-- `DOCKERHUB_USERNAME`
-- `DOCKERHUB_TOKEN` (use a Docker Hub access token with least privilege, not your password)
-
-## Limitations (LocalStack Community)
-
-- SES v1 only (SES v2 is not supported in Community)
-- SMTP and inbound email are not supported in Community
-
-## License
+## LICENSE
 
 MIT. See `LICENSE`.
