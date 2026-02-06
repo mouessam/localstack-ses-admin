@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Layout } from './components/layout/layout';
-import { IdentitiesPage } from './features/identities/identities-page';
-import { SendPage } from './features/send/send-page';
-import { RawPage } from './features/raw/raw-page';
-import { MessagesPage } from './features/messages/messages-page';
+import { Layout } from '@ses-admin/ui/components/layout/layout';
+import { IdentitiesPage } from '@ses-admin/ui/features/identities/identities-page';
+import { SendPage } from '@ses-admin/ui/features/send/send-page';
+import { RawPage } from '@ses-admin/ui/features/raw/raw-page';
+import { MessagesPage } from '@ses-admin/ui/features/messages/messages-page';
 
 export const App = () => {
   const [path, setPath] = usePath();
@@ -37,8 +37,8 @@ export const App = () => {
       default:
         // Redirect to identities if unknown
         if (path !== '/identities') {
-            window.history.replaceState({}, '', '/identities');
-            setPath('/identities');
+          window.history.replaceState({}, '', '/identities');
+          setPath('/identities');
         }
         return <IdentitiesPage />;
     }

@@ -1,7 +1,7 @@
-import { loadConfig } from './config/config';
-import { AwsSesAdapter } from './infrastructure/aws/ses-adapter';
-import { LocalStackMessagesAdapter } from './infrastructure/messages/messages-adapter';
-import { createServer } from './delivery/http/create-server';
+import { loadConfig } from '@ses-admin/server/config/config';
+import { AwsSesAdapter } from '@ses-admin/server/infrastructure/aws/ses-adapter';
+import { LocalStackMessagesAdapter } from '@ses-admin/server/infrastructure/messages/messages-adapter';
+import { createServer } from '@ses-admin/server/delivery/http/create-server';
 
 const start = async () => {
   const config = loadConfig();

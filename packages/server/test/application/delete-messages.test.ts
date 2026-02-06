@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import type { MessagesPort } from '../../src/domain/ports/messages-port';
-import { deleteMessages } from '../../src/application/delete-messages';
+import type { MessagesPort } from '@ses-admin/server/domain/ports/messages-port';
+import { deleteMessages } from '@ses-admin/server/application/delete-messages';
 
 // Mock MessagesPort for testing
 class MockMessagesPort implements MessagesPort {
@@ -43,10 +43,7 @@ test('deleteMessages throws error when messages port fails', async () => {
   const mockMessages = new MockMessagesPort();
   mockMessages.deleteMessagesError = new Error('Messages service unavailable');
 
-  await assert.rejects(
-    async () => await deleteMessages(mockMessages, { id: 'msg-123' }),
-    {
-      message: 'Messages service unavailable',
-    },
-  );
+  await assert.rejects(async () => await deleteMessages(mockMessages, { id: 'msg-123' }), {
+    message: 'Messages service unavailable',
+  });
 });

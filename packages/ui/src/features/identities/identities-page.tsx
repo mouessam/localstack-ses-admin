@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { deleteIdentity, listIdentities, verifyIdentity } from '../../api/client';
+import { deleteIdentity, listIdentities, verifyIdentity } from '@ses-admin/ui/api/client';
 import { Identity } from '@ses-admin/shared';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { cn } from '../../lib/utils';
+import { Button } from '@ses-admin/ui/components/ui/button';
+import { Input } from '@ses-admin/ui/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@ses-admin/ui/components/ui/card';
+import { Label } from '@ses-admin/ui/components/ui/label';
+import { Badge } from '@ses-admin/ui/components/ui/badge';
+import { cn } from '@ses-admin/ui/lib/utils';
 
 export const IdentitiesPage = () => {
   const [items, setItems] = useState<Identity[]>([]);
@@ -96,7 +102,7 @@ export const IdentitiesPage = () => {
                         'flex h-9 w-full rounded-md border border-border-subtle',
                         'bg-input px-3 py-1 text-sm text-text-primary',
                         'focus:outline-none focus:ring-2 focus:ring-primary',
-                        'cursor-pointer'
+                        'cursor-pointer',
                       )}
                       value={type}
                       onChange={(e) => setType(e.target.value as 'email' | 'domain')}
@@ -107,11 +113,7 @@ export const IdentitiesPage = () => {
                   </div>
                 </div>
                 <div className="flex justify-end pt-4">
-                  <Button
-                    variant="primary"
-                    onClick={onVerify}
-                    disabled={!identity || loading}
-                  >
+                  <Button variant="primary" onClick={onVerify} disabled={!identity || loading}>
                     {loading ? 'Verifying...' : 'Verify Identity'}
                   </Button>
                 </div>
@@ -137,16 +139,20 @@ export const IdentitiesPage = () => {
             </CardHeader>
             <CardContent className="p-0">
               {items.length === 0 ? (
-                <div className="text-center py-12 text-text-tertiary">
-                  No identities found.
-                </div>
+                <div className="text-center py-12 text-text-tertiary">No identities found.</div>
               ) : (
                 <div className="w-full">
                   {/* Table Header */}
                   <div className="flex items-center bg-subtle border-b border-border-subtle px-6 py-2">
-                    <div className="flex-1 text-xs font-medium text-text-secondary uppercase">Identity</div>
-                    <div className="w-24 text-xs font-medium text-text-secondary uppercase">Type</div>
-                    <div className="w-24 text-right text-xs font-medium text-text-secondary uppercase">Actions</div>
+                    <div className="flex-1 text-xs font-medium text-text-secondary uppercase">
+                      Identity
+                    </div>
+                    <div className="w-24 text-xs font-medium text-text-secondary uppercase">
+                      Type
+                    </div>
+                    <div className="w-24 text-right text-xs font-medium text-text-secondary uppercase">
+                      Actions
+                    </div>
                   </div>
                   {/* Table Rows */}
                   <div>

@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, it, mock } from 'node:test';
+import assert from 'node:assert/strict';
 import {
   deleteIdentity,
   deleteMessages,
@@ -7,102 +8,130 @@ import {
   sendEmail,
   sendRawEmail,
   verifyIdentity,
-} from '../../src/api/client';
+} from '@ses-admin/ui/api/client';
 
 // Mock fetch globally
-global.fetch = vi.fn();
+const originalFetch = global.fetch;
+const mockFetch = mock.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: async () => ({}),
+    statusText: 'OK',
+  } as Response),
+);
 
 describe('API Client', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockFetch.mock.resetCalls();
+    global.fetch = mockFetch;
   });
+
+  // Restore fetch after all tests
+  const originalAfterAll = new WeakMap();
+  if (!originalAfterAll.get(describe)) {
+    originalAfterAll.set(describe, true);
+    process.on('beforeExit', () => {
+      global.fetch = originalFetch;
+    });
+  }
 
   describe('listIdentities', () => {
     it('fetches identities successfully', async () => {
       const mockResponse = { items: [] };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const result = await listIdentities();
 
-      expect(fetch).toHaveBeenCalledWith('/api/identities', {
-        headers: {},
-      });
-      expect(result).toEqual(mockResponse);
+      assert.equal(mockFetch.mock.calls.length, 1);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/identities');
+      assert.deepEqual(call.arguments[1], { headers: {} });
+      assert.deepEqual(result, mockResponse);
     });
 
     it('throws error on failed request', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: false,
-        statusText: 'Not Found',
-        json: async () => ({ message: 'Not found' }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: false,
+          statusText: 'Not Found',
+          json: async () => ({ message: 'Not found' }),
+        } as Response),
+      );
 
-      await expect(listIdentities()).rejects.toThrow('Not found');
+      await assert.rejects(async () => await listIdentities(), {
+        message: 'Not found',
+      });
     });
   });
 
   describe('verifyIdentity', () => {
     it('verifies identity with POST request', async () => {
       const mockResponse = { ok: true };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const identity = { identity: 'test@example.com', type: 'email' as const };
       const result = await verifyIdentity(identity);
 
-      expect(fetch).toHaveBeenCalledWith('/api/identities', {
-        method: 'POST',
-        body: JSON.stringify(identity),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/identities');
+      assert.equal(call.arguments[1].method, 'POST');
+      assert.equal(call.arguments[1].body, JSON.stringify(identity));
+      assert.deepEqual(result, mockResponse);
     });
   });
 
   describe('deleteIdentity', () => {
     it('deletes identity with DELETE request', async () => {
       const mockResponse = { ok: true };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const result = await deleteIdentity('test@example.com');
 
-      expect(fetch).toHaveBeenCalledWith('/api/identities/test%40example.com', {
-        method: 'DELETE',
-        headers: {},
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/identities/test%40example.com');
+      assert.equal(call.arguments[1].method, 'DELETE');
+      assert.deepEqual(result, mockResponse);
     });
 
     it('encodes special characters in identity', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ ok: true }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ ok: true }),
+        } as Response),
+      );
 
       await deleteIdentity('user@example.com');
 
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/identities/user%40example.com',
-        expect.objectContaining({ method: 'DELETE' }),
-      );
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/identities/user%40example.com');
     });
   });
 
   describe('sendEmail', () => {
     it('sends email with POST request', async () => {
       const mockResponse = { messageId: 'msg-123' };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const email = {
         from: 'sender@example.com',
@@ -112,117 +141,127 @@ describe('API Client', () => {
       };
       const result = await sendEmail(email);
 
-      expect(fetch).toHaveBeenCalledWith('/api/send', {
-        method: 'POST',
-        body: JSON.stringify(email),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/send');
+      assert.equal(call.arguments[1].method, 'POST');
+      assert.equal(call.arguments[1].body, JSON.stringify(email));
+      assert.deepEqual(result, mockResponse);
     });
   });
 
   describe('sendRawEmail', () => {
     it('sends raw email with FormData', async () => {
       const mockResponse = { messageId: 'msg-456' };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const formData = new FormData();
       formData.append('from', 'sender@example.com');
       const result = await sendRawEmail(formData);
 
-      expect(fetch).toHaveBeenCalledWith('/api/send-raw', {
-        method: 'POST',
-        body: formData,
-        headers: {}, // No Content-Type for FormData
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/send-raw');
+      assert.equal(call.arguments[1].method, 'POST');
+      assert.equal(call.arguments[1].body, formData);
+      assert.deepEqual(result, mockResponse);
     });
   });
 
   describe('listMessages', () => {
     it('lists messages without filters', async () => {
       const mockResponse = { messages: [] };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const result = await listMessages();
 
-      expect(fetch).toHaveBeenCalledWith('/api/messages', {
-        headers: {},
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/messages');
+      assert.deepEqual(result, mockResponse);
     });
 
     it('lists messages with id filter', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ messages: [] }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ messages: [] }),
+        } as Response),
+      );
 
       await listMessages({ id: 'msg-123' });
 
-      expect(fetch).toHaveBeenCalledWith('/api/messages?id=msg-123', expect.any(Object));
+      const call = mockFetch.mock.calls[0];
+      assert.ok(call.arguments[0].includes('id=msg-123'));
     });
 
     it('lists messages with email filter', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ messages: [] }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ messages: [] }),
+        } as Response),
+      );
 
       await listMessages({ email: 'test@example.com' });
 
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/messages?email=test%40example.com',
-        expect.any(Object),
-      );
+      const call = mockFetch.mock.calls[0];
+      assert.ok(call.arguments[0].includes('email=test%40example.com'));
     });
 
     it('lists messages with both filters', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ messages: [] }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ messages: [] }),
+        } as Response),
+      );
 
       await listMessages({ id: 'msg-123', email: 'test@example.com' });
 
-      const url = vi.mocked(fetch).mock.calls[0][0];
-      expect(url).toContain('id=msg-123');
-      expect(url).toContain('email=test%40example.com');
+      const call = mockFetch.mock.calls[0];
+      assert.ok(call.arguments[0].includes('id=msg-123'));
+      assert.ok(call.arguments[0].includes('email=test%40example.com'));
     });
   });
 
   describe('deleteMessages', () => {
     it('deletes messages without filters', async () => {
       const mockResponse = { ok: true };
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResponse,
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => mockResponse,
+        } as Response),
+      );
 
       const result = await deleteMessages();
 
-      expect(fetch).toHaveBeenCalledWith('/api/messages', {
-        method: 'DELETE',
-        headers: {},
-      });
-      expect(result).toEqual(mockResponse);
+      const call = mockFetch.mock.calls[0];
+      assert.equal(call.arguments[0], '/api/messages');
+      assert.equal(call.arguments[1].method, 'DELETE');
+      assert.deepEqual(result, mockResponse);
     });
 
     it('deletes messages with filters', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ ok: true }),
-      } as Response);
+      mockFetch.mock.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ ok: true }),
+        } as Response),
+      );
 
       await deleteMessages({ id: 'msg-123' });
 
-      expect(fetch).toHaveBeenCalledWith('/api/messages?id=msg-123', expect.any(Object));
+      const call = mockFetch.mock.calls[0];
+      assert.ok(call.arguments[0].includes('id=msg-123'));
     });
   });
 });

@@ -4,8 +4,8 @@ import type {
   SendEmailInput,
   SendEmailResult,
   SendRawInput,
-  SendRawResult
-} from '../models/types';
+  SendRawResult,
+} from '@ses-admin/server/domain/models/types';
 
 export interface SesPort {
   listIdentities(): Promise<Identity[]>;

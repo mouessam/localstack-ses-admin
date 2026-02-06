@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sidebar } from './sidebar';
-import { cn } from '../../lib/utils';
+import { Sidebar } from '@ses-admin/ui/components/layout/sidebar';
+import { cn } from '@ses-admin/ui/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,9 +13,7 @@ export const Layout = ({ children, currentPath, onNavigate, className }: LayoutP
   return (
     <div className={cn('flex h-screen overflow-hidden', className)}>
       <Sidebar currentPath={currentPath} onNavigate={onNavigate} />
-      <main className="flex-1 overflow-hidden bg-background">
-        {children}
-      </main>
+      <main className="flex-1 overflow-hidden bg-background">{children}</main>
     </div>
   );
 };

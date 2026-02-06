@@ -1,8 +1,8 @@
 import { request } from 'undici';
-import type { AppConfig } from '../../config/config';
-import type { Message } from '../../domain/models/types';
-import type { MessagesPort } from '../../domain/ports/messages-port';
-import { UpstreamError } from '../../domain/errors/app-error';
+import type { AppConfig } from '@ses-admin/server/config/config';
+import type { Message } from '@ses-admin/server/domain/models/types';
+import type { MessagesPort } from '@ses-admin/server/domain/ports/messages-port';
+import { UpstreamError } from '@ses-admin/server/domain/errors/app-error';
 
 export class LocalStackMessagesAdapter implements MessagesPort {
   private readonly endpoint: string;

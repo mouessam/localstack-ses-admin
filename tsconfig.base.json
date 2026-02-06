@@ -3,6 +3,7 @@
     "target": "ES2019",
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "incremental": true,
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,6 +12,15 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@ses-admin/shared": ["./packages/shared/src"],
+      "@ses-admin/shared/*": ["./packages/shared/src/*"],
+      "@ses-admin/server": ["./packages/server/src"],
+      "@ses-admin/server/*": ["./packages/server/src/*"],
+      "@ses-admin/ui": ["./packages/ui/src"],
+      "@ses-admin/ui/*": ["./packages/ui/src/*"]
+    }
   }
 }

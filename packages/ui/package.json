@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node esbuild.config.js",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "prebuild": "npm run clean",
+    "build": "tsc -p tsconfig.json --noEmit && node esbuild.config.js",
     "dev": "node esbuild.config.js --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "node --test --import tsx $(find test -type f -name '*.test.ts' | sort)",
+    "test:coverage": "c8 --include 'src/**/*.{ts,tsx}' --exclude 'test/**/*.{ts,tsx}' --reporter=text --reporter=lcov --reporter=json-summary --check-coverage --lines 80 node --test --import tsx $(find test -type f -name '*.test.ts' | sort)"
   },
   "dependencies": {
     "@ses-admin/shared": "*",
@@ -16,20 +18,17 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@testing-library/react": "16.3.0",
-    "@testing-library/jest-dom": "6.6.3",
-    "@testing-library/user-event": "14.5.2",
+    "@ses-admin/build-tools": "*",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
-    "@vitest/coverage-v8": "3.0.9",
     "autoprefixer": "^10.4.24",
+    "c8": "^10.1.2",
     "clsx": "^2.1.1",
     "esbuild": "0.25.9",
-    "jsdom": "25.0.0",
     "postcss": "^8.5.6",
     "tailwind-merge": "^2.6.1",
     "tailwindcss": "^3.4.19",
-    "typescript": "5.8.3",
-    "vitest": "3.0.9"
+    "tsx": "4.20.5",
+    "typescript": "5.8.3"
   }
 }

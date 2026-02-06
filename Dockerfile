@@ -3,12 +3,13 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json package-lock.json tsconfig.base.json ./
+COPY packages/build-tools/package.json ./packages/build-tools/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/server/package.json ./packages/server/
 COPY packages/ui/package.json ./packages/ui/
 
 # Install dependencies (cached unless package files change)
-RUN npm install
+RUN npm ci
 
 # Copy source files
 COPY packages ./packages

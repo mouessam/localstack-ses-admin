@@ -7,17 +7,17 @@ import {
   VerifyDomainIdentityCommand,
   VerifyEmailIdentityCommand,
 } from '@aws-sdk/client-ses';
-import type { AppConfig } from '../../config/config';
-import type { SesPort } from '../../domain/ports/ses-port';
+import type { AppConfig } from '@ses-admin/server/config/config';
+import type { SesPort } from '@ses-admin/server/domain/ports/ses-port';
 import type {
   Identity,
   IdentityType,
   SendEmailInput,
   SendEmailResult,
   SendRawInput,
-  SendRawResult
-} from '../../domain/models/types';
-import { UpstreamError } from '../../domain/errors/app-error';
+  SendRawResult,
+} from '@ses-admin/server/domain/models/types';
+import { UpstreamError } from '@ses-admin/server/domain/errors/app-error';
 
 export class AwsSesAdapter implements SesPort {
   private readonly client: SESClient;

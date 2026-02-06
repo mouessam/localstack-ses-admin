@@ -10,9 +10,9 @@ import {
   VerifyDomainIdentityCommand,
   VerifyEmailIdentityCommand,
 } from '@aws-sdk/client-ses';
-import { AwsSesAdapter } from '../../src/infrastructure/aws/ses-adapter';
-import type { AppConfig } from '../../src/config/config';
-import { UpstreamError } from '../../src/domain/errors/app-error';
+import { AwsSesAdapter } from '@ses-admin/server/infrastructure/aws/ses-adapter';
+import type { AppConfig } from '@ses-admin/server/config/config';
+import { UpstreamError } from '@ses-admin/server/domain/errors/app-error';
 
 // Mock config
 const mockConfig: AppConfig = {
@@ -131,7 +131,10 @@ test('AwsSesAdapter.deleteIdentity throws UpstreamError on failure', async () =>
 
   const adapter = new AwsSesAdapter(mockConfig);
 
-  await assert.rejects(async () => await adapter.deleteIdentity('nonexistent@example.com'), UpstreamError);
+  await assert.rejects(
+    async () => await adapter.deleteIdentity('nonexistent@example.com'),
+    UpstreamError,
+  );
 
   sesMock.restore();
 });
@@ -266,7 +269,11 @@ test('AwsSesAdapter.sendRawEmail includes cc and bcc in destinations', async () 
 
   const calls = sesMock.commandCalls(SendRawEmailCommand);
   const callInput = calls[0].args[0].input;
-  assert.deepStrictEqual(callInput.Destinations, ['to@example.com', 'cc@example.com', 'bcc@example.com']);
+  assert.deepStrictEqual(callInput.Destinations, [
+    'to@example.com',
+    'cc@example.com',
+    'bcc@example.com',
+  ]);
 
   sesMock.restore();
 });

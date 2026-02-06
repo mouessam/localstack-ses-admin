@@ -1,5 +1,5 @@
 import MailComposer from 'nodemailer/lib/mail-composer';
-import type { SendRawInput } from '../../domain/models/types';
+import type { SendRawInput } from '@ses-admin/server/domain/models/types';
 
 export type AttachmentInput = {
   filename: string;

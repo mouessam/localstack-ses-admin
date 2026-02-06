@@ -1,6 +1,7 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
+const { createAliasPlugin } = require('@ses-admin/build-tools');
 
 const root = __dirname;
 
@@ -97,8 +98,8 @@ const postcssPlugin = {
 const buildOptions = {
   entryPoints: [path.join(root, 'src', 'main.tsx')],
   bundle: true,
-  minify: !isDev,
-  sourcemap: isDev,
+  minify: true,
+  sourcemap: false,
   outdir,
   entryNames: 'app',
   loader: {
@@ -106,7 +107,15 @@ const buildOptions = {
   },
   format: 'iife',
   target: ['es2019'],
-  plugins: [postcssPlugin, indexHtmlPlugin, reloadPlugin],
+  plugins: [
+    createAliasPlugin(root, {
+      // UI only needs @ses-admin/shared for external dependencies
+      '@ses-admin/shared': '../shared/src',
+    }),
+    postcssPlugin,
+    indexHtmlPlugin,
+    reloadPlugin,
+  ],
 };
 
 const run = async () => {

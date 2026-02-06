@@ -5,7 +5,7 @@ const globals = require('globals');
 
 module.exports = [
   {
-    ignores: ['**/dist/**', '**/node_modules/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/*.d.ts'],
   },
   js.configs.recommended,
   {
@@ -57,6 +57,14 @@ module.exports = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './packages/server/tsconfig.json',
+        },
+      },
+    },
   },
   {
     files: ['packages/ui/src/**/*.{ts,tsx}', 'packages/shared/src/**/*.ts'],
@@ -80,6 +88,14 @@ module.exports = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './packages/ui/tsconfig.json',
+        },
+      },
+    },
   },
   {
     files: ['packages/ui/test/**/*.{ts,tsx}', 'packages/shared/test/**/*.ts'],
@@ -102,6 +118,14 @@ module.exports = [
       'no-undef': 'off', // TypeScript handles this
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './packages/ui/tsconfig.test.json',
+        },
+      },
     },
   },
 ];

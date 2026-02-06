@@ -1,4 +1,10 @@
-import type { Identity, IdentityType, Message, SendEmailInput, SendRawInput, } from '@ses-admin/shared';
+import type {
+  Identity,
+  IdentityType,
+  Message,
+  SendEmailInput,
+  SendRawInput,
+} from '@ses-admin/shared';
 
 export type { Identity, IdentityType, Message, SendEmailInput, SendRawInput };
 

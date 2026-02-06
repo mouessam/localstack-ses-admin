@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { cn } from '../../lib/utils';
-import { VERSION } from '../../version';
+import { Button } from '@ses-admin/ui/components/ui/button';
+import { Switch } from '@ses-admin/ui/components/ui/switch';
+import { cn } from '@ses-admin/ui/lib/utils';
+import { VERSION } from '@ses-admin/ui/version';
 
 interface SidebarProps {
   currentPath: string;
@@ -18,11 +18,24 @@ const navItems = [
 ];
 
 export const Sidebar = ({ currentPath, onNavigate, className }: SidebarProps) => {
-  const [isDark, setIsDark] = useState(false);
+  // Initialize with actual current theme (not just false)
+  const [isDark, setIsDark] = useState(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
+  // Sync with document theme changes (e.g., from app.tsx initialization)
   useEffect(() => {
-    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-    setIsDark(isDarkTheme);
+    const observer = new MutationObserver(() => {
+      const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+      setIsDark(isDarkTheme);
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = (checked: boolean) => {

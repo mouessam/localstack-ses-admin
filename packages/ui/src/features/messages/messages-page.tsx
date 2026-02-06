@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { deleteMessages, listMessages } from '../../api/client';
+import { deleteMessages, listMessages } from '@ses-admin/ui/api/client';
 import { Message } from '@ses-admin/shared';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { cn } from '../../lib/utils';
+import { Button } from '@ses-admin/ui/components/ui/button';
+import { Input } from '@ses-admin/ui/components/ui/input';
+import { cn } from '@ses-admin/ui/lib/utils';
 
 type MessageView = {
   key: string;
@@ -91,7 +91,7 @@ export const MessagesPage = () => {
           raw: msg,
         };
       }),
-    [messages]
+    [messages],
   );
 
   const sortedItems = useMemo(() => {
@@ -226,7 +226,13 @@ export const MessagesPage = () => {
           <Button variant="ghost" size="sm" onClick={load} title="Refresh (r)">
             Refresh
           </Button>
-          <Button variant="danger" size="sm" onClick={onDeleteSelected} disabled={!selectedItem} title="Delete (Del)">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={onDeleteSelected}
+            disabled={!selectedItem}
+            title="Delete (Del)"
+          >
             Delete
           </Button>
           <Button variant="danger" size="sm" onClick={onDeleteAll} title="Delete All">
@@ -253,7 +259,7 @@ export const MessagesPage = () => {
                   className={cn(
                     'w-full text-left p-4 transition-all relative',
                     'hover:bg-hover',
-                    selectedKey === item.key && 'bg-primary-subtle'
+                    selectedKey === item.key && 'bg-primary-subtle',
                   )}
                 >
                   {/* Active Indicator Line */}
@@ -262,10 +268,12 @@ export const MessagesPage = () => {
                   )}
 
                   <div className="flex justify-between items-baseline mb-1">
-                    <span className={cn(
-                      'text-sm font-semibold truncate flex-1 pr-2',
-                      selectedKey === item.key ? 'text-primary' : 'text-text-primary'
-                    )}>
+                    <span
+                      className={cn(
+                        'text-sm font-semibold truncate flex-1 pr-2',
+                        selectedKey === item.key ? 'text-primary' : 'text-text-primary',
+                      )}
+                    >
                       {item.subject || '(No Subject)'}
                     </span>
                     <span className="text-xs text-text-tertiary whitespace-nowrap font-mono">
@@ -297,7 +305,9 @@ export const MessagesPage = () => {
                 </h1>
                 <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm text-text-secondary">
                   <span className="text-text-tertiary">From:</span>
-                  <span className="font-medium text-text-primary select-text">{selectedItem.from}</span>
+                  <span className="font-medium text-text-primary select-text">
+                    {selectedItem.from}
+                  </span>
 
                   <span className="text-text-tertiary">To:</span>
                   <span className="select-text">{selectedItem.to}</span>
@@ -391,20 +401,18 @@ const extractMessageView = (msg: Message): Omit<MessageView, 'key' | 'raw'> => {
   const timestamp = (raw.Timestamp ?? raw.timestamp ?? '') as string;
 
   const body = raw.Body as Record<string, unknown> | undefined;
-  const textBody =
-    (body?.text_part ??
-      (body?.Text as Record<string, unknown> | undefined)?.Data ??
-      (raw.body as Record<string, unknown> | undefined)?.text_part ??
-      raw.text ??
-      raw.Text ??
-      '') as string;
-  const htmlBody =
-    (body?.html_part ??
-      (body?.Html as Record<string, unknown> | undefined)?.Data ??
-      (raw.body as Record<string, unknown> | undefined)?.html_part ??
-      raw.html ??
-      raw.Html ??
-      '') as string;
+  const textBody = (body?.text_part ??
+    (body?.Text as Record<string, unknown> | undefined)?.Data ??
+    (raw.body as Record<string, unknown> | undefined)?.text_part ??
+    raw.text ??
+    raw.Text ??
+    '') as string;
+  const htmlBody = (body?.html_part ??
+    (body?.Html as Record<string, unknown> | undefined)?.Data ??
+    (raw.body as Record<string, unknown> | undefined)?.html_part ??
+    raw.html ??
+    raw.Html ??
+    '') as string;
   const previewSource = textBody || htmlBody || '';
   const preview = typeof previewSource === 'string' ? previewSource.trim().slice(0, 160) : '';
 

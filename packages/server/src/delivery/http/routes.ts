@@ -1,18 +1,18 @@
 import { Busboy } from '@fastify/busboy';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { IdentitySchema, SendEmailSchema, SendRawSchema } from '@ses-admin/shared';
-import { ValidationError } from '../../domain/errors/app-error';
-import type { MessagesPort } from '../../domain/ports/messages-port';
-import type { SesPort } from '../../domain/ports/ses-port';
-import type { AttachmentInput } from '../../infrastructure/mime/mime-builder';
-import { buildRawMime } from '../../infrastructure/mime/mime-builder';
-import { deleteIdentity } from '../../application/delete-identity';
-import { deleteMessages } from '../../application/delete-messages';
-import { listIdentities } from '../../application/list-identities';
-import { listMessages } from '../../application/list-messages';
-import { sendEmail } from '../../application/send-email';
-import { sendRawEmail } from '../../application/send-raw-email';
-import { verifyIdentity } from '../../application/verify-identity';
+import { ValidationError } from '@ses-admin/server/domain/errors/app-error';
+import type { MessagesPort } from '@ses-admin/server/domain/ports/messages-port';
+import type { SesPort } from '@ses-admin/server/domain/ports/ses-port';
+import type { AttachmentInput } from '@ses-admin/server/infrastructure/mime/mime-builder';
+import { buildRawMime } from '@ses-admin/server/infrastructure/mime/mime-builder';
+import { deleteIdentity } from '@ses-admin/server/application/delete-identity';
+import { deleteMessages } from '@ses-admin/server/application/delete-messages';
+import { listIdentities } from '@ses-admin/server/application/list-identities';
+import { listMessages } from '@ses-admin/server/application/list-messages';
+import { sendEmail } from '@ses-admin/server/application/send-email';
+import { sendRawEmail } from '@ses-admin/server/application/send-raw-email';
+import { verifyIdentity } from '@ses-admin/server/application/verify-identity';
 
 export type RouteDeps = {
   ses: SesPort;

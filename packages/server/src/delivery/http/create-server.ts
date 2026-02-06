@@ -3,11 +3,11 @@ import path from 'node:path';
 import type { ServerResponse } from 'node:http';
 import fastify from 'fastify';
 import staticPlugin from '@fastify/static';
-import type { AppConfig } from '../../config/config';
-import { AppError } from '../../domain/errors/app-error';
-import type { MessagesPort } from '../../domain/ports/messages-port';
-import type { SesPort } from '../../domain/ports/ses-port';
-import { registerRoutes } from './routes';
+import type { AppConfig } from '@ses-admin/server/config/config';
+import { AppError } from '@ses-admin/server/domain/errors/app-error';
+import type { MessagesPort } from '@ses-admin/server/domain/ports/messages-port';
+import type { SesPort } from '@ses-admin/server/domain/ports/ses-port';
+import { registerRoutes } from '@ses-admin/server/delivery/http/routes';
 
 export type ServerDeps = {
   config: AppConfig;
@@ -19,9 +19,13 @@ export const createServer = ({ config, ses, messages }: ServerDeps) => {
   const app = fastify({ logger: true });
   const reloadClients = new Set<ServerResponse>();
 
-  app.addContentTypeParser('multipart/form-data', { bodyLimit: 10 * 1024 * 1024 }, (_req, payload, done) => {
-    done(null, payload);
-  });
+  app.addContentTypeParser(
+    'multipart/form-data',
+    { bodyLimit: 10 * 1024 * 1024 },
+    (_req, payload, done) => {
+      done(null, payload);
+    },
+  );
 
   if (config.NODE_ENV === 'development') {
     app.get('/__reload', (_request, reply) => {

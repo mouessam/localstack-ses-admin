@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { sendEmail } from '../../api/client';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Label } from '../../components/ui/label';
-import { cn } from '../../lib/utils';
+import { sendEmail } from '@ses-admin/ui/api/client';
+import { Button } from '@ses-admin/ui/components/ui/button';
+import { Input } from '@ses-admin/ui/components/ui/input';
+import { Textarea } from '@ses-admin/ui/components/ui/textarea';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@ses-admin/ui/components/ui/card';
+import { Label } from '@ses-admin/ui/components/ui/label';
+import { cn } from '@ses-admin/ui/lib/utils';
 
 export const SendPage = () => {
   const [form, setForm] = useState({
@@ -25,7 +31,10 @@ export const SendPage = () => {
   };
 
   const splitList = (value: string): string[] =>
-    value.split(',').map((entry) => entry.trim()).filter(Boolean);
+    value
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter(Boolean);
 
   const onSubmit = async () => {
     setStatus(null);
@@ -67,109 +76,112 @@ export const SendPage = () => {
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-5xl mx-auto">
           <Card>
-        <CardHeader>
-          <CardTitle>Compose Message</CardTitle>
-          <CardDescription>Enter the details below.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="from">From</Label>
-              <Input
-                id="from"
-                value={form.from}
-                onChange={(e) => onChange('from', e.target.value)}
-                placeholder="sender@example.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="to">
-                To <span className="text-text-tertiary font-normal text-xs">(comma separated)</span>
-              </Label>
-              <Input
-                id="to"
-                value={form.to}
-                onChange={(e) => onChange('to', e.target.value)}
-                placeholder="recipient@example.com, other@example.com"
-              />
-            </div>
-          </div>
+            <CardHeader>
+              <CardTitle>Compose Message</CardTitle>
+              <CardDescription>Enter the details below.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="from">From</Label>
+                  <Input
+                    id="from"
+                    value={form.from}
+                    onChange={(e) => onChange('from', e.target.value)}
+                    placeholder="sender@example.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="to">
+                    To{' '}
+                    <span className="text-text-tertiary font-normal text-xs">
+                      (comma separated)
+                    </span>
+                  </Label>
+                  <Input
+                    id="to"
+                    value={form.to}
+                    onChange={(e) => onChange('to', e.target.value)}
+                    placeholder="recipient@example.com, other@example.com"
+                  />
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="cc">CC</Label>
-              <Input
-                id="cc"
-                value={form.cc}
-                onChange={(e) => onChange('cc', e.target.value)}
-                placeholder="cc@example.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bcc">BCC</Label>
-              <Input
-                id="bcc"
-                value={form.bcc}
-                onChange={(e) => onChange('bcc', e.target.value)}
-                placeholder="bcc@example.com"
-              />
-            </div>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="cc">CC</Label>
+                  <Input
+                    id="cc"
+                    value={form.cc}
+                    onChange={(e) => onChange('cc', e.target.value)}
+                    placeholder="cc@example.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bcc">BCC</Label>
+                  <Input
+                    id="bcc"
+                    value={form.bcc}
+                    onChange={(e) => onChange('bcc', e.target.value)}
+                    placeholder="bcc@example.com"
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject</Label>
-            <Input
-              id="subject"
-              value={form.subject}
-              onChange={(e) => onChange('subject', e.target.value)}
-              placeholder="Enter subject line..."
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject</Label>
+                <Input
+                  id="subject"
+                  value={form.subject}
+                  onChange={(e) => onChange('subject', e.target.value)}
+                  placeholder="Enter subject line..."
+                />
+              </div>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="text-body">Text Body</Label>
-              <Textarea
-                id="text-body"
-                value={form.text}
-                onChange={(e) => onChange('text', e.target.value)}
-                placeholder="Plain text content..."
-                className="font-mono text-sm min-h-[9.375rem]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="html-body">HTML Body</Label>
-              <Textarea
-                id="html-body"
-                value={form.html}
-                onChange={(e) => onChange('html', e.target.value)}
-                placeholder="<p>HTML content...</p>"
-                className="font-mono text-sm min-h-[9.375rem]"
-              />
-            </div>
-          </div>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="text-body">Text Body</Label>
+                  <Textarea
+                    id="text-body"
+                    value={form.text}
+                    onChange={(e) => onChange('text', e.target.value)}
+                    placeholder="Plain text content..."
+                    className="font-mono text-sm min-h-[9.375rem]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="html-body">HTML Body</Label>
+                  <Textarea
+                    id="html-body"
+                    value={form.html}
+                    onChange={(e) => onChange('html', e.target.value)}
+                    placeholder="<p>HTML content...</p>"
+                    className="font-mono text-sm min-h-[9.375rem]"
+                  />
+                </div>
+              </div>
 
-          <div className="pt-6 border-t border-border-subtle flex items-center justify-between">
-            <div className="flex-1 mr-4">
-              {status && (
-                <span
-                  className={cn(
-                    'inline-flex px-3 py-2 rounded-md font-medium text-sm',
-                    isSuccess
-                      ? 'bg-success-subtle text-success-text border border-success-primary'
-                      : 'bg-danger-subtle text-danger-text border border-danger-primary'
+              <div className="pt-6 border-t border-border-subtle flex items-center justify-between">
+                <div className="flex-1 mr-4">
+                  {status && (
+                    <span
+                      className={cn(
+                        'inline-flex px-3 py-2 rounded-md font-medium text-sm',
+                        isSuccess
+                          ? 'bg-success-subtle text-success-text border border-success-primary'
+                          : 'bg-danger-subtle text-danger-text border border-danger-primary',
+                      )}
+                    >
+                      {status}
+                    </span>
                   )}
-                >
-                  {status}
-                </span>
-              )}
-            </div>
-            <Button variant="primary" onClick={onSubmit} disabled={loading} size="lg">
-              {loading ? 'Sending...' : 'Send Email'}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+                </div>
+                <Button variant="primary" onClick={onSubmit} disabled={loading} size="lg">
+                  {loading ? 'Sending...' : 'Send Email'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

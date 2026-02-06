@@ -4,8 +4,7 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "target": "ES2019",
-    "types": ["node"]
+    "target": "ES2019"
   },
   "include": ["src"]
 }

@@ -10,37 +10,58 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-      - run: npm install
-      - run: npm run build
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run test
+      - name: Install dependencies
+        run: npm ci
+      - name: Build workspaces
+        run: npm run build
+      - name: Lint workspaces
+        run: npm run lint
+      - name: Enforce alias-only imports
+        run: npm run lint:imports
+      - name: Typecheck workspaces
+        run: npm run typecheck
+      - name: Run tests
+        run: npm run test
 
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-      - run: npm install
-      - run: npm run test:coverage
+      - name: Install dependencies
+        run: npm ci
+      - name: Run coverage
+        run: npm run test:coverage
       - name: Display coverage summaries
         run: |
           echo "### Shared Package" >> $GITHUB_STEP_SUMMARY
-          cat packages/shared/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
+          cat packages/shared/coverage/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Server Package" >> $GITHUB_STEP_SUMMARY
-          cat packages/server/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
+          cat packages/server/coverage/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### UI Package" >> $GITHUB_STEP_SUMMARY
           cat packages/ui/coverage/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            packages/shared/coverage/lcov.info
+            packages/server/coverage/lcov.info
+            packages/ui/coverage/lcov.info
 
   release:
     runs-on: ubuntu-latest

@@ -1,1 +1,1 @@
-export * from './schemas';
+export * from '@ses-admin/shared/schemas';

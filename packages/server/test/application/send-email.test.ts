@@ -1,8 +1,8 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import type { SesPort } from '../../src/domain/ports/ses-port';
-import type { SendEmailInput, SendEmailResult } from '../../src/domain/models/types';
-import { sendEmail } from '../../src/application/send-email';
+import type { SesPort } from '@ses-admin/server/domain/ports/ses-port';
+import type { SendEmailInput, SendEmailResult } from '@ses-admin/server/domain/models/types';
+import { sendEmail } from '@ses-admin/server/application/send-email';
 
 // Mock SesPort for testing
 class MockSesPort implements SesPort {
