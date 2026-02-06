@@ -31,8 +31,16 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm run test:coverage
-      - name: Display coverage summary
-        run: cat packages/server/coverage-summary.json | jq '.'
+      - name: Display coverage summaries
+        run: |
+          echo "### Shared Package" >> $GITHUB_STEP_SUMMARY
+          cat packages/shared/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Server Package" >> $GITHUB_STEP_SUMMARY
+          cat packages/server/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### UI Package" >> $GITHUB_STEP_SUMMARY
+          cat packages/ui/coverage/coverage-summary.json | jq '.' >> $GITHUB_STEP_SUMMARY || echo "No coverage data"
 
   release:
     runs-on: ubuntu-latest

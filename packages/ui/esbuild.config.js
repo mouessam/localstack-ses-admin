@@ -3,6 +3,17 @@ const fs = require('fs');
 const path = require('path');
 
 const root = __dirname;
+
+// Generate version.ts from package.json files
+const generateVersionFile = () => {
+  const uiPkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+  const serverPkg = JSON.parse(fs.readFileSync(path.join(root, '../server/package.json'), 'utf8'));
+  const versionPath = path.join(root, 'src', 'version.ts');
+  const content = `export const VERSION = {\n  ui: '${uiPkg.version || '0.0.0'}',\n  server: '${serverPkg.version || '0.0.0'}',\n} as const;\n`;
+  fs.writeFileSync(versionPath, content);
+};
+
+generateVersionFile();
 const outdir = path.join(root, 'dist');
 const indexHtml = path.join(root, 'src', 'index.html');
 const isWatch = process.argv.includes('--watch');

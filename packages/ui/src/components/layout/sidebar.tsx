@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { cn } from '../../lib/utils';
+import { VERSION } from '../../version';
 
 interface SidebarProps {
   currentPath: string;
@@ -33,11 +34,13 @@ export const Sidebar = ({ currentPath, onNavigate, className }: SidebarProps) =>
   };
 
   return (
-    <aside className={cn(
-      'flex flex-col w-64 bg-panel text-text-primary',
-      'border-r border-border-subtle',
-      className
-    )}>
+    <aside
+      className={cn(
+        'flex flex-col w-64 bg-panel text-text-primary',
+        'border-r border-border-subtle',
+        className,
+      )}
+    >
       {/* Header */}
       <div className="p-6 border-b border-border-subtle">
         <h1 className="text-xl font-bold">SES Viewr</h1>
@@ -50,10 +53,7 @@ export const Sidebar = ({ currentPath, onNavigate, className }: SidebarProps) =>
           <Button
             key={item.path}
             variant={currentPath === item.path ? 'secondary' : 'ghost'}
-            className={cn(
-              'w-full justify-start',
-              currentPath === item.path && 'bg-primary-subtle'
-            )}
+            className={cn('w-full justify-start', currentPath === item.path && 'bg-primary-subtle')}
             onClick={() => onNavigate(item.path)}
           >
             {item.label}
@@ -65,12 +65,11 @@ export const Sidebar = ({ currentPath, onNavigate, className }: SidebarProps) =>
       <div className="p-4 border-t border-border-subtle">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-text-secondary">Dark Mode</span>
-          <Switch
-            checked={isDark}
-            onChange={(e) => toggleTheme(e.target.checked)}
-          />
+          <Switch checked={isDark} onChange={(e) => toggleTheme(e.target.checked)} />
         </div>
-        <p className="text-xs text-text-tertiary">v1.0.0</p>
+        <p className="text-xs text-text-tertiary">
+          ui v{VERSION.ui} <span className="text-text-quaternary">|</span> server v{VERSION.server}
+        </p>
       </div>
     </aside>
   );
