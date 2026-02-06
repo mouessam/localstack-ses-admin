@@ -7,9 +7,9 @@
     "build": "tsc -p tsconfig.json --noEmit && node esbuild.config.js",
     "dev": "NODE_ENV=development tsx watch --env-file=../../.env src/main.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.ts\"",
-    "test": "node --test --import tsx src/**/*.test.ts",
-    "test:coverage": "c8 --include 'src/**/*.ts' --exclude 'src/**/*.test.ts' --reporter=text --reporter=lcov --reporter=json-summary --check-coverage --lines 80 node --test --import tsx src/**/*.test.ts"
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "node --test --import tsx test/**/*.test.ts",
+    "test:coverage": "c8 --include 'src/**/*.ts' --exclude 'test/**/*.ts' --reporter=text --reporter=lcov --reporter=json-summary --check-coverage --lines 80 node --test --import tsx test/**/*.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "3.975.0",

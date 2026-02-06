@@ -7,7 +7,7 @@ import {
   sendEmail,
   sendRawEmail,
   verifyIdentity,
-} from './client';
+} from '../../src/api/client';
 
 // Mock fetch globally
 global.fetch = vi.fn();

@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import FormData from 'form-data';
-import type { MessagesPort } from '../../domain/ports/messages-port';
-import type { SesPort } from '../../domain/ports/ses-port';
-import { UpstreamError } from '../../domain/errors/app-error';
-import { createServer } from './create-server';
+import type { MessagesPort } from '../../src/domain/ports/messages-port';
+import type { SesPort } from '../../src/domain/ports/ses-port';
+import { UpstreamError } from '../../src/domain/errors/app-error';
+import { createServer } from '../../src/delivery/http/create-server';
 
 const makeServer = (nodeEnv = 'test') => {
   const calls = {

@@ -10,9 +10,9 @@ import {
   VerifyDomainIdentityCommand,
   VerifyEmailIdentityCommand,
 } from '@aws-sdk/client-ses';
-import { AwsSesAdapter } from './ses-adapter';
-import type { AppConfig } from '../../config/config';
-import { UpstreamError } from '../../domain/errors/app-error';
+import { AwsSesAdapter } from '../../src/infrastructure/aws/ses-adapter';
+import type { AppConfig } from '../../src/config/config';
+import { UpstreamError } from '../../src/domain/errors/app-error';
 
 // Mock config
 const mockConfig: AppConfig = {

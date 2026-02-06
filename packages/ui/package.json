@@ -6,7 +6,7 @@
     "build": "node esbuild.config.js",
     "dev": "node esbuild.config.js --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

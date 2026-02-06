@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import { buildRawMime } from './mime-builder';
+import { buildRawMime } from '../../src/infrastructure/mime/mime-builder';
 
 const sample = {
   from: 'no-reply@example.com',

@@ -8,7 +8,7 @@ import {
   MessageSchema,
   SendEmailSchema,
   SendRawSchema,
-} from './schemas.js';
+} from '../src/schemas.js';
 
 describe('IdentityTypeSchema', () => {
   it('accepts valid email type', () => {

@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import type { SesPort } from '../domain/ports/ses-port';
-import { deleteIdentity } from './delete-identity';
+import type { SesPort } from '../../src/domain/ports/ses-port';
+import { deleteIdentity } from '../../src/application/delete-identity';
 
 // Mock SesPort for testing
 class MockSesPort implements SesPort {

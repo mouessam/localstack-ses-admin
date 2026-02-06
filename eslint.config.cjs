@@ -40,7 +40,7 @@ module.exports = [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: ['./packages/server/tsconfig.json'],
+        project: ['./packages/server/tsconfig.json', './packages/server/tsconfig.test.json'],
         tsconfigRootDir: __dirname,
         sourceType: 'module',
       },
@@ -59,11 +59,34 @@ module.exports = [
     },
   },
   {
-    files: ['packages/ui/**/*.ts', 'packages/ui/**/*.tsx', 'packages/shared/**/*.ts'],
+    files: ['packages/ui/src/**/*.{ts,tsx}', 'packages/shared/src/**/*.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: ['./packages/ui/tsconfig.json', './packages/shared/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.browser,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+      'no-undef': 'off', // TypeScript handles this
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['packages/ui/test/**/*.{ts,tsx}', 'packages/shared/test/**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: ['./packages/shared/tsconfig.test.json', './packages/ui/tsconfig.test.json'],
         tsconfigRootDir: __dirname,
         sourceType: 'module',
       },

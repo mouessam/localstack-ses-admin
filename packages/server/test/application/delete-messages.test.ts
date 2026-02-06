@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
-import type { MessagesPort } from '../domain/ports/messages-port';
-import { deleteMessages } from './delete-messages';
+import type { MessagesPort } from '../../src/domain/ports/messages-port';
+import { deleteMessages } from '../../src/application/delete-messages';
 
 // Mock MessagesPort for testing
 class MockMessagesPort implements MessagesPort {
